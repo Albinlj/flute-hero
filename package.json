@@ -26,6 +26,8 @@
     "@types/node": "^22",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
+    "@xmldom/xmldom": "^0.8.11",
+    "puppeteer": "^24.31.0",
     "tailwindcss": "^4.1.13",
     "typescript": "^5.9.2",
     "vite": "^7.1.7",
