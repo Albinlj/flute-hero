@@ -49,7 +49,6 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
-  let errorString: string | undefined;
 
   if (isRouteErrorResponse(error)) {
     message = error.status === 404 ? "404" : "Error";
@@ -57,39 +56,18 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
       error.status === 404
         ? "The requested page could not be found."
         : error.statusText || details;
-  } else if (error instanceof Error) {
+  } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;
-    errorString = error.toString();
-  } else if (error) {
-    errorString = String(error);
-    details = errorString;
-  }
-
-  // Log full error to console in production
-  console.error("ErrorBoundary caught error:", error);
-  if (error instanceof Error) {
-    console.error("Error message:", error.message);
-    console.error("Error stack:", error.stack);
   }
 
   return (
     <main className="pt-16 p-4 container mx-auto">
       <h1>{message}</h1>
       <p>{details}</p>
-      {errorString && (
-        <pre className="w-full p-4 overflow-x-auto bg-gray-100 dark:bg-gray-800 rounded mt-4">
-          <code className="text-sm">{errorString}</code>
-        </pre>
-      )}
       {stack && (
-        <pre className="w-full p-4 overflow-x-auto bg-gray-100 dark:bg-gray-800 rounded mt-4">
-          <code className="text-sm">{stack}</code>
-        </pre>
-      )}
-      {error && typeof error === "object" && (
-        <pre className="w-full p-4 overflow-x-auto bg-gray-100 dark:bg-gray-800 rounded mt-4">
-          <code className="text-sm">{JSON.stringify(error, null, 2)}</code>
+        <pre className="w-full p-4 overflow-x-auto">
+          <code>{stack}</code>
         </pre>
       )}
     </main>
