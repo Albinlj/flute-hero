@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Flute } from "./flute";
-import type { KeyId, KeyState, KeyStates } from "./fingering";
+import type { Key, KeyState, KeyStates } from "./fingering";
 
 export function InteractiveFlute() {
   const [keys, setKeys] = useState<KeyStates>({});
 
-  const toggleKey = (keyId: KeyId) => {
+  const toggleKey = (keyId: Key) => {
     setKeys((prev) => {
       const currentState = prev[keyId];
       let newState: KeyState | undefined;

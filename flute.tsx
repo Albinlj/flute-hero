@@ -1,10 +1,10 @@
 import { useRef } from "react";
-import type { KeyId, KeyStates } from "fingering";
+import type { Key, KeyStates } from "fingering";
 import { useSvgIdLabels } from "./app/hooks/useSvgIdLabels";
 
 type Props = {
   keys: KeyStates;
-  onKeyClick?: (keyId: KeyId) => void;
+  onKeyClick?: (keyId: Key) => void;
   showIdLabels?: boolean;
 };
 
@@ -123,7 +123,7 @@ export const Flute = ({ keys, onKeyClick, showIdLabels = false }: Props) => {
   useSvgIdLabels(showIdLabels ? svgRef : { current: null });
 
   // Helper function to get the fill class for a key based on its state
-  const getKeyFillClass = (keyId: KeyId): string => {
+  const getKeyFillClass = (keyId: Key): string => {
     const state = keys[keyId];
     if (state === "closed") {
       return "fill-red";
@@ -134,7 +134,7 @@ export const Flute = ({ keys, onKeyClick, showIdLabels = false }: Props) => {
     return "fill-white";
   };
 
-  const handleKeyClick = (keyId: KeyId) => {
+  const handleKeyClick = (keyId: Key) => {
     onKeyClick?.(keyId);
   };
 
