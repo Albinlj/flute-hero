@@ -1,0 +1,1 @@
+- Make named hooks whenever possible instead of having useEffects etc in the component.
