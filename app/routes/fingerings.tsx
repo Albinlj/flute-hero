@@ -1,6 +1,6 @@
 import type { Route } from "./+types/fingerings";
 import { Flute } from "../../flute";
-import { fingerings, getPreferredFingering } from "../../fingering";
+import { fingerings, getPreferredFingering, type Key } from "../../fingering";
 
 export function meta({}: Route.MetaArgs) {
   return [

@@ -1,0 +1,7 @@
+.flute {
+  [pressed] {
+    path {
+      fill: red !important;
+    }
+  }
+}

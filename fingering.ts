@@ -11,11 +11,6 @@
 
 
 /**
- * Represents the state of a single key in a fingering pattern
- */
-export type KeyState = "open" | "closed" | "half" | "optional";
-
-/**
  * Union type of all valid flute key names
  * Keys are named after the notes they produce, not after fingers
  */
@@ -43,20 +38,13 @@ export type Key =
   | "c-key"
   | "c-lid";
 
-
-/**
- * Represents the state of all keys for a fingering pattern
- * Keys are indexed by their KeyId
- */
-export type KeyStates = Partial<Record<Key, KeyState>>;
-
 /**
  * Represents a single alternative fingering for a note
  * The first alternative in the array is considered the preferred fingering
  */
 export interface FingeringAlternative {
-  /** Key states for this fingering, indexed by KeyId */
-  keys: KeyStates;
+  /** Keys that are pressed (closed) for this fingering */
+  keys: Key[];
   /** Whether this fingering is useful for trills */
   trillFriendly?: boolean;
   /** Optional description or use case for this alternative */
@@ -112,16 +100,16 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: {
-          "c-key": "closed",
-          "d-key": "closed",
-          "e-key": "closed",
-          "f-key": "closed",
-          "g-key": "closed",
-          "a-key": "closed",
-          "b-key": "closed",
-          "low-c-key": "closed",
-        },
+        keys: [
+          "c-key",
+          "d-key",
+          "e-key",
+          "f-key",
+          "g-key",
+          "a-key",
+          "b-key",
+          "low-c-key",
+        ],
       },
     ],
   },
@@ -130,15 +118,15 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: {
-          "c#-key": "closed",
-          "d-key": "closed",
-          "e-key": "closed",
-          "f-key": "closed",
-          "g-key": "closed",
-          "a-key": "closed",
-          "b-key": "closed",
-        },
+        keys: [
+          "c#-key",
+          "d-key",
+          "e-key",
+          "f-key",
+          "g-key",
+          "a-key",
+          "b-key",
+        ],
       },
     ],
   },
@@ -147,15 +135,15 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: {
-          "c-key": "closed",
-          "d-key": "closed",
-          "e-key": "closed",
-          "f-key": "closed",
-          "g-key": "closed",
-          "a-key": "closed",
-          "b-key": "closed",
-        },
+        keys: [
+          "c-key",
+          "d-key",
+          "e-key",
+          "f-key",
+          "g-key",
+          "a-key",
+          "b-key",
+        ],
       },
     ],
   },
@@ -164,15 +152,15 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: {
-          "c-key": "closed",
-          "d#-key": "closed",
-          "e-key": "closed",
-          "f-key": "closed",
-          "g-key": "closed",
-          "a-key": "closed",
-          "b-key": "closed",
-        },
+        keys: [
+          "c-key",
+          "d#-key",
+          "e-key",
+          "f-key",
+          "g-key",
+          "a-key",
+          "b-key",
+        ],
       },
     ],
   },
@@ -181,14 +169,14 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: {
-          "c-key": "closed",
-          "d-key": "closed",
-          "e-key": "closed",
-          "f-key": "closed",
-          "g-key": "closed",
-          "a-key": "closed",
-        },
+        keys: [
+          "c-key",
+          "d-key",
+          "e-key",
+          "f-key",
+          "g-key",
+          "a-key",
+        ],
       },
     ],
   },
@@ -197,13 +185,13 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: {
-          "c-key": "closed",
-          "d-key": "closed",
-          "e-key": "closed",
-          "f-key": "closed",
-          "g-key": "closed",
-        },
+        keys: [
+          "c-key",
+          "d-key",
+          "e-key",
+          "f-key",
+          "g-key",
+        ],
       },
     ],
   },
@@ -212,13 +200,13 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: {
-          "c-key": "closed",
-          "d-key": "closed",
-          "e-key": "closed",
-          "f#-key": "closed",
-          "g-key": "closed",
-        },
+        keys: [
+          "c-key",
+          "d-key",
+          "e-key",
+          "f#-key",
+          "g-key",
+        ],
       },
     ],
   },
@@ -227,12 +215,12 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: {
-          "c-key": "closed",
-          "d-key": "closed",
-          "e-key": "closed",
-          "g-key": "closed",
-        },
+        keys: [
+          "c-key",
+          "d-key",
+          "e-key",
+          "g-key",
+        ],
       },
     ],
   },
@@ -241,20 +229,20 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: {
-          "c-key": "closed",
-          "d-key": "closed",
-          "e-key": "closed",
-          "g#-key": "closed",
-        },
+        keys: [
+          "c-key",
+          "d-key",
+          "e-key",
+          "g#-key",
+        ],
       },
       {
-        keys: {
-          "c-key": "closed",
-          "d-key": "closed",
-          "e-key": "closed",
-          "g#-lever": "closed",
-        },
+        keys: [
+          "c-key",
+          "d-key",
+          "e-key",
+          "g#-lever",
+        ],
         description: "Using G# lever",
       },
     ],
@@ -264,12 +252,12 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: {
-          "c-key": "closed",
-          "d-key": "closed",
-          "e-key": "closed",
-          "a-key": "closed",
-        },
+        keys: [
+          "c-key",
+          "d-key",
+          "e-key",
+          "a-key",
+        ],
       },
     ],
   },
@@ -278,12 +266,12 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: {
-          "c-key": "closed",
-          "d-key": "closed",
-          "e-key": "closed",
-          "ice-lever-a#": "closed",
-        },
+        keys: [
+          "c-key",
+          "d-key",
+          "e-key",
+          "ice-lever-a#",
+        ],
         description: "Using Ice lever (A#)",
       },
     ],
@@ -293,11 +281,11 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: {
-          "c-key": "closed",
-          "d-key": "closed",
-          "b-key": "closed",
-        },
+        keys: [
+          "c-key",
+          "d-key",
+          "b-key",
+        ],
       },
     ],
   },
@@ -306,9 +294,7 @@ export const fingerings: Fingering[] = [
     octave: 5,
     alternatives: [
       {
-        keys: {
-          "c-key": "closed",
-        },
+        keys: ["c-key"],
       },
     ],
   },

@@ -1,34 +1,22 @@
 import { useState } from "react";
 import { Flute } from "./flute";
-import type { Key, KeyState, KeyStates } from "./fingering";
+import type { Key } from "./fingering";
 
 export function InteractiveFlute() {
-  const [keys, setKeys] = useState<KeyStates>({});
+  const [keys, setKeys] = useState<Key[]>([]);
 
   const toggleKey = (keyId: Key) => {
     setKeys((prev) => {
-      const currentState = prev[keyId];
-      let newState: KeyState | undefined;
-
-      // Cycle through states: undefined -> closed -> open -> undefined
-      if (currentState === undefined || currentState === "open") {
-        newState = "closed";
-      } else if (currentState === "closed") {
-        newState = "open";
+      if (prev.includes(keyId)) {
+        return prev.filter((k) => k !== keyId);
       } else {
-        // For "half" or "optional", cycle to closed
-        newState = "closed";
+        return [...prev, keyId];
       }
-
-      return {
-        ...prev,
-        [keyId]: newState,
-      };
     });
   };
 
   const resetKeys = () => {
-    setKeys({});
+    setKeys([]);
   };
 
   return (
@@ -43,7 +31,7 @@ export function InteractiveFlute() {
       </div>
       <Flute keys={keys} onKeyClick={toggleKey} />
       <div className="text-sm text-gray-600 mt-2">
-        Click keys to toggle: closed (red) → open (gray) → closed
+        Click keys to toggle: pressed (red) → released (white)
       </div>
     </div>
   );
