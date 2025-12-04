@@ -1,42 +1,54 @@
-/**
- * Flute Fingering Chart Data Structure
- * 
- * This file contains type definitions and data for transverse flute fingerings,
- * including parts/key names and fingering patterns with alternative fingerings.
- */
+export const implicitKeys: Record<Key, Key[]> = {
+  "roller-key": ["roller-key", "roller"],
+  "d#-lever": ["d#-lever", "d#-trill-lever"],
+  "d-trill-lever": ["d-trill-lever", "d#-trill-lever"],
+  "e-mechanism-ar": ["e-mechanism-ar"],
+  "ice-lever-a#": ["ice-lever-a#"],
+  "briccialdi-key": ["briccialdi-key"],
+  "g#-key": ["g#-key"],
+  "g-key": ["g-key"],
+  "g#-lever": ["g#-lever"],
+  "b-key": ["b-key"],
+  "c-key": ["c-key", "briccialdi-key"],
+  "c#-key": ["c#-key"],
+  "d-key": ["d-key"],
+  "d#-key": ["d#-key"],
+  "e-key": ["e-key", "d#-key"],
+  "f-key": ["f-key", "f#-key"],
+  "f#-key": ["f#-key", "f-key"],
+  "c-lid": ["c-lid", "c-key"],
+  "low-c-key": ["low-c-key"],
+  "a-key": ["a-key"],
+  "d#-trill-lever": ["d#-trill-lever"],
+  roller: ["roller-key", "roller"],
+};
 
-// ============================================================================
-// Type Definitions
-// ============================================================================
+export const keys = [
+  "roller-key",
+  "roller",
+  "d#-lever",
+  "low-c-key",
+  "c#-key",
+  "d#-key",
+  "d-key",
+  "e-key",
+  "f-key",
+  "f#-key",
+  "a-key",
+  "d#-trill-lever",
+  "d-trill-lever",
+  "e-mechanism-ar",
+  "ice-lever-a#",
+  "briccialdi-key",
+  "g#-key",
+  "g-key",
+  "g#-lever",
+  "b-key",
+  "c-key",
+  "c-lid",
+] as const;
 
-
-/**
- * Union type of all valid flute key names
- * Keys are named after the notes they produce, not after fingers
- */
-export type Key =
-  | "roller-key"
-  | "roller"
-  | "d#-lever"
-  | "low-c-key"
-  | "c#-key"
-  | "d#-key"
-  | "d-key"
-  | "e-key"
-  | "f-key"
-  | "f#-key"
-  | "a-key"
-  | "d#-trill-lever"
-  | "d-trill-lever"
-  | "e-mechanism-ar"
-  | "ice-lever-a#"
-  | "briccialdi-key"
-  | "g#-key"
-  | "g-key"
-  | "g#-lever"
-  | "b-key"
-  | "c-key"
-  | "c-lid";
+export type Key = (typeof keys)[number];
 
 /**
  * Represents a single alternative fingering for a note
@@ -64,31 +76,8 @@ export interface Fingering {
 }
 
 /**
- * Complete fingering chart data structure
- */
-export interface FingeringChart {
-  /** Metadata about the chart */
-  metadata: {
-    /** Instrument type */
-    instrument: string;
-    /** Version of the chart data */
-    version: string;
-    /** Optional description */
-    description?: string;
-  };
-  /** Flute parts/keys information */
-  /** Fingering patterns for all notes */
-  fingerings: Fingering[];
-}
-
-
-// ============================================================================
-// Fingering Patterns Data
-// ============================================================================
-
-/**
  * Flute fingering chart data
- * 
+ *
  * Note: This is a template structure. Actual fingering data should be populated
  * from the fingering.pdf file. Each note can have multiple alternative fingerings.
  */
@@ -102,13 +91,6 @@ export const fingerings: Fingering[] = [
       {
         keys: [
           "c-key",
-          "d-key",
-          "e-key",
-          "f-key",
-          "g-key",
-          "a-key",
-          "b-key",
-          "low-c-key",
         ],
       },
     ],
@@ -118,15 +100,7 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: [
-          "c#-key",
-          "d-key",
-          "e-key",
-          "f-key",
-          "g-key",
-          "a-key",
-          "b-key",
-        ],
+        keys: ["c#-key", "d-key", "e-key", "f-key", "g-key", "a-key", "b-key"],
       },
     ],
   },
@@ -135,15 +109,7 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: [
-          "c-key",
-          "d-key",
-          "e-key",
-          "f-key",
-          "g-key",
-          "a-key",
-          "b-key",
-        ],
+        keys: ["c-key", "d-key", "e-key", "f-key", "g-key", "a-key", "b-key"],
       },
     ],
   },
@@ -152,15 +118,7 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: [
-          "c-key",
-          "d#-key",
-          "e-key",
-          "f-key",
-          "g-key",
-          "a-key",
-          "b-key",
-        ],
+        keys: ["c-key", "d#-key", "e-key", "f-key", "g-key", "a-key", "b-key"],
       },
     ],
   },
@@ -169,14 +127,7 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: [
-          "c-key",
-          "d-key",
-          "e-key",
-          "f-key",
-          "g-key",
-          "a-key",
-        ],
+        keys: ["c-key", "d-key", "e-key", "f-key", "g-key", "a-key"],
       },
     ],
   },
@@ -185,13 +136,7 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: [
-          "c-key",
-          "d-key",
-          "e-key",
-          "f-key",
-          "g-key",
-        ],
+        keys: ["c-key", "d-key", "e-key", "f-key", "g-key"],
       },
     ],
   },
@@ -200,13 +145,7 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: [
-          "c-key",
-          "d-key",
-          "e-key",
-          "f#-key",
-          "g-key",
-        ],
+        keys: ["c-key", "d-key", "e-key", "f#-key", "g-key"],
       },
     ],
   },
@@ -215,12 +154,7 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: [
-          "c-key",
-          "d-key",
-          "e-key",
-          "g-key",
-        ],
+        keys: ["c-key", "d-key", "e-key", "g-key"],
       },
     ],
   },
@@ -229,20 +163,10 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: [
-          "c-key",
-          "d-key",
-          "e-key",
-          "g#-key",
-        ],
+        keys: ["c-key", "d-key", "e-key", "g#-key"],
       },
       {
-        keys: [
-          "c-key",
-          "d-key",
-          "e-key",
-          "g#-lever",
-        ],
+        keys: ["c-key", "d-key", "e-key", "g#-lever"],
         description: "Using G# lever",
       },
     ],
@@ -252,12 +176,7 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: [
-          "c-key",
-          "d-key",
-          "e-key",
-          "a-key",
-        ],
+        keys: ["c-key", "d-key", "e-key", "a-key"],
       },
     ],
   },
@@ -266,12 +185,7 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: [
-          "c-key",
-          "d-key",
-          "e-key",
-          "ice-lever-a#",
-        ],
+        keys: ["c-key", "d-key", "e-key", "ice-lever-a#"],
         description: "Using Ice lever (A#)",
       },
     ],
@@ -281,11 +195,7 @@ export const fingerings: Fingering[] = [
     octave: 4,
     alternatives: [
       {
-        keys: [
-          "c-key",
-          "d-key",
-          "b-key",
-        ],
+        keys: ["c-key", "d-key", "b-key"],
       },
     ],
   },
@@ -302,19 +212,6 @@ export const fingerings: Fingering[] = [
 ];
 
 // ============================================================================
-// Complete Chart Export
-// ============================================================================
-
-export const fingeringChart: FingeringChart = {
-  metadata: {
-    instrument: "transverse flute",
-    version: "1.0.0",
-    description: "Fingering chart for transverse flute with alternative fingerings",
-  },
-  fingerings,
-};
-
-// ============================================================================
 // Helper Functions
 // ============================================================================
 
@@ -325,9 +222,7 @@ export function findFingering(
   note: string,
   octave: number
 ): Fingering | undefined {
-  return fingerings.find(
-    (f) => f.note === note && f.octave === octave
-  );
+  return fingerings.find((f) => f.note === note && f.octave === octave);
 }
 
 /**
@@ -367,4 +262,3 @@ export function getAllNoteNames(): string[] {
   const noteSet = new Set(fingerings.map((f) => f.note));
   return Array.from(noteSet).sort();
 }
-

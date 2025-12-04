@@ -247,7 +247,7 @@ export default function Game() {
 
               {showFingering && preferredFingering && preferredFingering.keys && (
                 <div className="mb-6 flex justify-center">
-                  <Flute keys={preferredFingering.keys} />
+                  <Flute keysPressed={preferredFingering.keys} />
                 </div>
               )}
 

@@ -4,4 +4,9 @@
       fill: red !important;
     }
   }
+  [implicitly-pressed] {
+    path {
+      fill: green !important;
+    }
+  }
 }

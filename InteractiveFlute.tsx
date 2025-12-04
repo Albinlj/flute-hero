@@ -29,7 +29,7 @@ export function InteractiveFlute() {
           Reset All Keys
         </button>
       </div>
-      <Flute keys={keys} onKeyClick={toggleKey} />
+      <Flute keysPressed={keys} onKeyClick={toggleKey} />
       <div className="text-sm text-gray-600 mt-2">
         Click keys to toggle: pressed (red) → released (white)
       </div>

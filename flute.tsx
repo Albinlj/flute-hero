@@ -1,17 +1,17 @@
-import { useRef, useEffect, useState } from "react";
-import type { Key } from "fingering";
+import { useRef, useEffect, useState, useMemo } from "react";
+import { implicitKeys, keys, type Key } from "fingering";
 import flute from "./flute.svg";
 import "./flute.css";
 
 type Props = {
-  keys: Key[];
+  keysPressed: Key[];
   onKeyClick?: (keyId: Key) => void;
   showIdLabels?: boolean;
 };
 
-export const Flute = ({ keys, onKeyClick, showIdLabels = false }: Props) => {
-  const [svg, setSvg] = useState<SVGSVGElement | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+export const Flute = ({ keysPressed, onKeyClick, showIdLabels = false }: Props) => {
+  const [svg, setSvg] = useState<SVGSVGElement | undefined>(undefined);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -37,27 +37,69 @@ export const Flute = ({ keys, onKeyClick, showIdLabels = false }: Props) => {
     };
   }, []);
 
+  const implicitlyPressed: Key[] = useMemo(() => {
+    return keysPressed.flatMap((key) => implicitKeys[key]);
+  }, [keysPressed]);
+
+  console.log("KEYS", keysPressed);
+  console.log("IMPLICITLY PRESSED", implicitlyPressed);
+
+  console.log("IMP", implicitlyPressed);
+
+  return (
+    <>
+      {keys.map((key) => (
+        <FluteKey
+          fluteKey={key}
+          isPressed={keysPressed.includes(key)}
+          isImplicitlyPressed={implicitlyPressed.includes(key)}
+          svg={svg}
+        />
+      ))}
+      <div ref={containerRef} aria-label="Flute" />;
+    </>
+  );
+};
+
+const FluteKey = ({
+  fluteKey,
+  isPressed,
+  isImplicitlyPressed,
+  svg,
+}: {
+  fluteKey: Key;
+  isPressed: boolean;
+  isImplicitlyPressed: boolean;
+  svg: SVGSVGElement | undefined;
+}) => {
+  const [group, setGroup] = useState<SVGGElement | undefined>(undefined);
+
+  console.log([fluteKey, isPressed, isImplicitlyPressed]);
 
   useEffect(() => {
     if (!svg) return;
 
-    for (const key of keys) {
-      console.log(key);
-      const element = svg.getElementById(key);
-      if (element) {
-        element.setAttribute("pressed", "true");
-      }
+    const element = svg.getElementById(fluteKey);
+    if (!element) throw new Error(`Element ${fluteKey} not found in SVG`);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setGroup(element as SVGGElement);
+  }, [fluteKey, isPressed, svg]);
+
+  useEffect(() => {
+    if (!group) return;
+    if (isPressed) {
+      group.setAttribute("pressed", "true");
+    } else if (isImplicitlyPressed) {
+      console.log("implicitly pressed", fluteKey);
+      group.setAttribute("implicitly-pressed", "true");
+    } else {
+      group.removeAttribute("pressed");
     }
 
     return () => {
-      for (const key of keys) {
-        const element = svg.getElementById(key);
-        if (element) {
-          element.removeAttribute("pressed");
-        }
-      }
+      group?.removeAttribute("pressed");
     };
-  }, [keys, svg]);
+  }, [group, isPressed, isImplicitlyPressed, fluteKey]);
 
-  return <div ref={containerRef} aria-label="Flute" />;
+  return null;
 };

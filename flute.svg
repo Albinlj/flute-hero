@@ -8,47 +8,6 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
-  <defs
-     id="defs174" />
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#000000"
-     borderopacity="0.25"
-     inkscape:showpageshadow="2"
-     inkscape:pageopacity="0.0"
-     inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="4.753326"
-     inkscape:cx="95.722447"
-     inkscape:cy="26.823323"
-     inkscape:window-width="888"
-     inkscape:window-height="920"
-     inkscape:window-x="625"
-     inkscape:window-y="34"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg174"
-     showgrid="true">
-    <inkscape:grid
-       units="px"
-       originx="0"
-       originy="0"
-       spacingx="1"
-       spacingy="0.99999997"
-       empcolor="#0099e5"
-       empopacity="0.30196078"
-       color="#0099e5"
-       opacity="0.14902"
-       empspacing="5"
-       enabled="true"
-       visible="true" />
-  </sodipodi:namedview>
-  <style
-     id="style1">
-        :not([id]) {
-            fill: #FF0000;
-            stroke: #2c292a;
-        }
-    </style>
   <g
      style="display:inline">
     <path
@@ -515,7 +474,7 @@
        style="stroke-linecap:round;stroke-linejoin:round;fill:#ffffff;stroke:#000000;stroke-opacity:1;stroke-width:0.3;stroke-dasharray:none" />
   </g>
   <g
-     inkscape:label="e-key">
+     id="e-key">
     <path
        d="m 152.3,126.61 a 3.225,3.225 0 1 1 -6.449,0.001 3.225,3.225 0 0 1 6.449,-0.001"
        style="stroke-linecap:round;stroke-linejoin:round;fill:#ffffff;stroke:#000000;stroke-opacity:1;stroke-width:0.3;stroke-dasharray:none" />
