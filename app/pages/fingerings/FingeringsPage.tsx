@@ -5,12 +5,12 @@ import { useVexStave } from "~/hooks/useVexStave";
 import { useVexStaveNote } from "~/hooks/useVexStaveNote";
 
 function NoteDisplay({ note, octave }: { note: string; octave: number }) {
-  const [rendererRef, setCanvasRef] = useVexRenderer(200, 200);
-  const staveRef = useVexStave(rendererRef);
+  const [rendererRef, setCanvasRef] = useVexRenderer(100, 100);
+  const staveRef = useVexStave(rendererRef, 0, 0, 99, "treble");
   useVexStaveNote(rendererRef, staveRef, note, octave);
 
   return (
-    <canvas ref={setCanvasRef} className="border border-gray-200 rounded" />
+    <canvas ref={setCanvasRef} />
   );
 }
 
