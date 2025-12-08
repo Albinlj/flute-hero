@@ -1,4 +1,4 @@
-import { GamePage } from "~/pages/GamePage";
+import { GamePage } from "~/pages/game/GamePage";
 
 export function meta() {
   return [

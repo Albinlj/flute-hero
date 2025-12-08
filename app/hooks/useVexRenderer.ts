@@ -1,7 +1,7 @@
-import { useEffect, useRef, useCallback, type RefObject } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import * as Vex from "vexflow";
 
-export function useVexRenderer() {
+export function useVexRenderer(width = 600, height = 200) {
   const rendererRef = useRef<Vex.Renderer | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -10,14 +10,20 @@ export function useVexRenderer() {
 
     const renderer = new Vex.Renderer(
       canvasRef.current,
-      Vex.Renderer.Backends.CANVAS
+      Vex.Renderer.Backends.CANVAS,
     );
     rendererRef.current = renderer;
-    renderer.resize(600, 200);
-  }, []);
+
+
+    renderer.resize(width, height);
+  }, [width, height]);
 
   useEffect(() => {
     initializeRenderer();
+
+    return () => {
+      rendererRef.current = null;
+    };
   }, [initializeRenderer]);
 
   const setCanvasRef = useCallback((element: HTMLCanvasElement | null) => {

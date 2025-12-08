@@ -12,12 +12,13 @@ export function useVexNoteRenderer(
 
     const renderer = rendererRef.current;
     const ctx = renderer.getContext();
+    const canvas = canvasRef.current;
     
     // Clear the canvas
-    if (canvasRef.current) {
-      const canvasCtx = canvasRef.current.getContext('2d');
+    if (canvas) {
+      const canvasCtx = canvas.getContext('2d');
       if (canvasCtx) {
-        canvasCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+        canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
       }
     }
 
@@ -52,12 +53,19 @@ export function useVexNoteRenderer(
 
       const voice = new Vex.Voice({ numBeats: 4, beatValue: 4 });
       voice.addTickables([staveNote]);
-
-      const formatter = new Vex.Formatter().joinVoices([voice]).format([voice], 550);
       voice.draw(ctx, stave);
     } catch (err) {
       console.error("Error rendering note:", err);
     }
+
+    return () => {
+      if (canvas) {
+        const canvasCtx = canvas.getContext('2d');
+        if (canvasCtx) {
+          canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+    };
   }, [rendererRef, canvasRef, detectedNote, frequency]);
 }
 

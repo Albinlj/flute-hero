@@ -1,4 +1,4 @@
-import { FingeringsPage } from "~/pages/FingeringsPage";
+import { FingeringsPage } from "~/pages/fingerings/FingeringsPage";
 
 export function meta() {
   return [

@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useMicrophoneListener } from "~/hooks/useMicrophoneListener";
 import { useToneSynth } from "~/hooks/useToneSynth";
 import { useVexRenderer } from "~/hooks/useVexRenderer";
-import { useVexNoteDisplay } from "~/hooks/useVexNoteDisplay";
+import { useVexStave } from "~/hooks/useVexStave";
+import { useVexStaveNote } from "~/hooks/useVexStaveNote";
 import { fingerings, getPreferredFingering } from "~/lib/fingering";
 import { Flute } from "~/components/flute/Flute";
 
@@ -33,7 +34,7 @@ export function GamePage() {
   const [targetNote, setTargetNote] = useState<{
     note: string;
     octave: number;
-  } | null>(null);
+  } | null>(getRandomNote());
   const [showFingering, setShowFingering] = useState(false);
   const [playAudio, setPlayAudio] = useState(true);
   const [score, setScore] = useState(0);
@@ -44,7 +45,6 @@ export function GamePage() {
   const {
     isListening,
     detectedNote,
-    frequency,
     cents,
     error,
     startListening,
@@ -55,13 +55,15 @@ export function GamePage() {
   const audioIntervalRef = useRef<number | null>(null);
   const [rendererRef, setCanvasRef, canvasRef] = useVexRenderer();
 
-  useVexNoteDisplay(
+  const staveRef = useVexStave(rendererRef);
+  useVexStaveNote(
     rendererRef,
-    canvasRef,
+    staveRef,
     targetNote?.note || null,
     targetNote?.octave || null
   );
 
+  // Loop target note audio on when sound is enabled
   useEffect(() => {
     if (!targetNote || !playAudio) {
       if (audioIntervalRef.current) {
@@ -85,10 +87,7 @@ export function GamePage() {
     };
   }, [targetNote, playAudio, playNote]);
 
-  useEffect(() => {
-    setTargetNote(getRandomNote());
-  }, []);
-
+  // Cleanup any running animation frame on unmount
   useEffect(() => {
     return () => {
       if (progressIntervalRef.current) {
@@ -97,6 +96,7 @@ export function GamePage() {
     };
   }, []);
 
+  // Drive progress bar based on detected note accuracy and timing
   useEffect(() => {
     if (!isListening || !detectedNote || !targetNote) {
       if (progressIntervalRef.current) {
@@ -198,7 +198,8 @@ export function GamePage() {
                 {detectedNote && (
                   <div className="mt-4">
                     <div className="text-xl text-gray-700">
-                      Detected: <span className="font-semibold">{detectedNote}</span>
+                      Detected:{" "}
+                      <span className="font-semibold">{detectedNote}</span>
                     </div>
                     {cents !== null && (
                       <div

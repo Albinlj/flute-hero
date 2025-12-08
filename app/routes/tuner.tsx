@@ -1,5 +1,5 @@
 import type { Route } from "./+types/tuner";
-import { TunerPage } from "~/pages/TunerPage";
+import { TunerPage } from "~/pages/tuner/TunerPage";
 
 export function meta(_: Route.MetaArgs) {
   return [
