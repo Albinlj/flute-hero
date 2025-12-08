@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState, useMemo } from "react";
-import { implicitKeys, keys, type Key } from "fingering";
+import { implicitKeys, keys, type Key } from "~/lib/fingering";
 import flute from "./flute.svg";
 import "./flute.css";
 
@@ -9,33 +9,62 @@ type Props = {
   showIdLabels?: boolean;
 };
 
-export const Flute = ({ keysPressed, onKeyClick, showIdLabels = false }: Props) => {
+const useFluteSvg = () => {
   const [svg, setSvg] = useState<SVGSVGElement | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    let appendedSvg: SVGSVGElement | null = null;
+
     const container = containerRef.current;
     if (!container) return;
 
-    fetch(flute)
+    const abortController = new AbortController();
+
+    fetch(flute, { signal: abortController.signal })
       .then((res) => res.text())
       .then((svgText) => {
+        if (abortController.signal.aborted) return;
+
         const parser = new DOMParser();
         const doc = parser.parseFromString(svgText, "image/svg+xml");
         const svgElement = doc.querySelector("svg");
-        if (svgElement) {
+        if (
+          svgElement &&
+          containerRef.current === container &&
+          !container.hasChildNodes()
+        ) {
           svgElement.setAttribute("width", "100%");
           svgElement.setAttribute("height", "100%");
           svgElement.classList.add("flute");
           container.appendChild(svgElement);
-          setSvg(svgElement as SVGSVGElement);
+          appendedSvg = svgElement as SVGSVGElement;
+          setSvg(appendedSvg);
+        }
+      })
+      .catch((err) => {
+        if (err.name !== "AbortError") {
+          throw err;
         }
       });
 
     return () => {
-      container.innerHTML = "";
+      abortController.abort();
+      if (container && appendedSvg && container.contains(appendedSvg)) {
+        container.removeChild(appendedSvg);
+      }
     };
   }, []);
+
+  return { svg, containerRef };
+};
+
+export const Flute = ({
+  keysPressed,
+  onKeyClick: _onKeyClick,
+  showIdLabels: _showIdLabels = false,
+}: Props) => {
+  const { svg, containerRef } = useFluteSvg();
 
   const implicitlyPressed: Key[] = useMemo(() => {
     return keysPressed.flatMap((key) => implicitKeys[key]);
@@ -72,18 +101,7 @@ const FluteKey = ({
   isImplicitlyPressed: boolean;
   svg: SVGSVGElement | undefined;
 }) => {
-  const [group, setGroup] = useState<SVGGElement | undefined>(undefined);
-
-  console.log([fluteKey, isPressed, isImplicitlyPressed]);
-
-  useEffect(() => {
-    if (!svg) return;
-
-    const element = svg.getElementById(fluteKey);
-    if (!element) throw new Error(`Element ${fluteKey} not found in SVG`);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setGroup(element as SVGGElement);
-  }, [fluteKey, isPressed, svg]);
+  const group = useFluteGroup(fluteKey, svg);
 
   useEffect(() => {
     if (!group) return;
@@ -99,7 +117,15 @@ const FluteKey = ({
     return () => {
       group?.removeAttribute("pressed");
     };
-  }, [group, isPressed, isImplicitlyPressed, fluteKey]);
+  }, [fluteKey, group, isImplicitlyPressed, isPressed]);
 
   return null;
 };
+
+const useFluteGroup = (fluteKey: Key, svg?: SVGSVGElement) =>
+  useMemo(() => {
+    if (!svg) return undefined;
+    const element = svg.getElementById(fluteKey);
+    if (!element) throw new Error(`Element ${fluteKey} not found in SVG`);
+    return element as SVGGElement;
+  }, [fluteKey, svg]);

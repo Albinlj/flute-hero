@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Flute } from "./flute";
-import type { Key } from "./fingering";
+import { Flute } from "./Flute";
+import type { Key } from "~/lib/fingering";
 
 export function InteractiveFlute() {
   const [keys, setKeys] = useState<Key[]>([]);
