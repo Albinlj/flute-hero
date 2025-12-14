@@ -35,8 +35,8 @@ export function GamePage() {
     note: string;
     octave: number;
   } | null>(getRandomNote());
-  const [showFingering, setShowFingering] = useState(false);
-  const [playAudio, setPlayAudio] = useState(true);
+  const [showFingering, setShowFingering] = useState(true);
+  const [playAudio, setPlayAudio] = useState(false);
   const [score, setScore] = useState(0);
   const [progress, setProgress] = useState(0);
   const progressIntervalRef = useRef<number | null>(null);
@@ -49,7 +49,7 @@ export function GamePage() {
     error,
     startListening,
     stopListening,
-  } = useMicrophoneListener();
+  } = useMicrophoneListener(true);
 
   const { playNote } = useToneSynth();
   const audioIntervalRef = useRef<number | null>(null);
@@ -195,26 +195,27 @@ export function GamePage() {
                     {targetNote.octave}
                   </sub>
                 </div>
-                {detectedNote && (
-                  <div className="mt-4">
-                    <div className="text-xl text-gray-700">
-                      Detected:{" "}
-                      <span className="font-semibold">{detectedNote}</span>
-                    </div>
-                    {cents !== null && (
-                      <div
-                        className={`text-sm mt-1 ${
-                          Math.abs(cents) < 50
-                            ? "text-green-600"
-                            : "text-orange-600"
-                        }`}
-                      >
-                        {cents > 0 ? "+" : ""}
-                        {cents.toFixed(1)} cents
-                      </div>
-                    )}
+                <div className="mt-4">
+                  <div
+                    className={`text-xl ${detectedNote ? "text-gray-700" : "text-gray-400"}`}
+                  >
+                    Detected:{" "}
+                    <span className="font-semibold">{detectedNote || "—"}</span>
                   </div>
-                )}
+                  <div
+                    className={`text-sm mt-1 ${
+                      detectedNote && cents !== null
+                        ? Math.abs(cents) < 50
+                          ? "text-green-600"
+                          : "text-orange-600"
+                        : "text-gray-400"
+                    }`}
+                  >
+                    {detectedNote && cents !== null
+                      ? `${cents > 0 ? "+" : ""}${cents.toFixed(1)} cents`
+                      : "—"}
+                  </div>
+                </div>
 
                 {isListening && (
                   <div className="mt-6">
@@ -258,6 +259,16 @@ export function GamePage() {
                       Stop Listening
                     </button>
                   )}
+                  <button
+                    onClick={() => {
+                      setTargetNote(getRandomNote());
+                      setProgress(0);
+                      progressStartTimeRef.current = null;
+                    }}
+                    className="px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+                  >
+                    Skip Note
+                  </button>
                   <button
                     onClick={() => setShowFingering(!showFingering)}
                     className="px-6 py-3 bg-gray-600 text-white rounded-lg font-semibold hover:bg-gray-700 transition-colors"

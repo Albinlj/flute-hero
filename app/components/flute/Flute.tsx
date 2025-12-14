@@ -67,7 +67,11 @@ export const Flute = ({
   const { svg, containerRef } = useFluteSvg();
 
   const implicitlyPressed: Key[] = useMemo(() => {
-    return keysPressed.flatMap((key) => implicitKeys[key]);
+    const pressed = keysPressed.flatMap((key) => implicitKeys[key][0]);
+    const notPressed = keys
+      .filter((key) => !keysPressed.includes(key))
+      .flatMap((key) => implicitKeys[key][1]);
+    return [...pressed, ...notPressed];
   }, [keysPressed]);
 
   console.log("KEYS", keysPressed);

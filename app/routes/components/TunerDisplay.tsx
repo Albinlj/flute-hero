@@ -1,52 +1,59 @@
 import { TuningFeedback } from "./TuningFeedback";
 
 interface TunerDisplayProps {
-  canvasRef: (element: HTMLCanvasElement | null) => void;
   detectedNote: string | null;
   frequency: number | null;
   cents: number | null;
+  volume: number;
   isListening: boolean;
 }
 
+function VolumeGauge({ volume }: { volume: number }) {
+  const percentage = volume * 100;
+
+  return (
+    <div className="w-full max-w-md space-y-2">
+      <div className="text-sm text-gray-600 dark:text-gray-400 text-center">
+        Volume
+      </div>
+      <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded-lg overflow-hidden">
+        <div
+          className="h-full bg-blue-500 transition-all duration-100"
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export function TunerDisplay({
-  canvasRef,
   detectedNote,
   frequency,
   cents,
+  volume,
   isListening,
 }: TunerDisplayProps) {
+  const hasNote = detectedNote && frequency;
+
   return (
     <div className="flex flex-col items-center gap-6">
-      {detectedNote && frequency ? (
-        <>
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full">
-            <canvas
-              ref={canvasRef}
-              className="w-full border border-gray-200 dark:border-gray-700 rounded"
-            />
-          </div>
+      {isListening && <VolumeGauge volume={volume} />}
 
-          <div className="text-center space-y-2">
-            <div className="text-5xl font-bold">{detectedNote}</div>
-            <div className="text-lg text-gray-600 dark:text-gray-400">
-              {frequency.toFixed(2)} Hz
-            </div>
-            <TuningFeedback cents={cents} />
+      {isListening && (
+        <div className="text-center space-y-6 w-full">
+          <div
+            className={`text-8xl font-bold ${!hasNote ? "text-gray-400" : ""}`}
+          >
+            {hasNote ? detectedNote : "—"}
           </div>
-        </>
-      ) : isListening ? (
-        <div className="text-center text-gray-500">
-          Waiting for audio input...
-        </div>
-      ) : (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 w-full">
-          <canvas
-            ref={canvasRef}
-            className="w-full border border-gray-200 dark:border-gray-700 rounded"
-          />
+          <div className="text-xl text-gray-600 dark:text-gray-400">
+            {hasNote
+              ? `${frequency.toFixed(2)} Hz`
+              : "Waiting for audio input..."}
+          </div>
+          <TuningFeedback cents={cents} isActive={!!hasNote} />
         </div>
       )}
     </div>
   );
 }
-

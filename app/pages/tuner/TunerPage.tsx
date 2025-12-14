@@ -1,6 +1,4 @@
-import { useVexRenderer } from "~/hooks/useVexRenderer";
 import { useMicrophoneListener } from "~/hooks/useMicrophoneListener";
-import { useVexNoteRenderer } from "~/hooks/useVexNoteRenderer";
 import { TunerControls } from "~/routes/components/TunerControls";
 import { TunerDisplay } from "~/routes/components/TunerDisplay";
 
@@ -10,13 +8,11 @@ export function TunerPage() {
     detectedNote,
     frequency,
     cents,
+    volume,
     error,
     startListening,
     stopListening,
   } = useMicrophoneListener();
-
-  const [rendererRef, setCanvasRef, canvasRef] = useVexRenderer();
-  useVexNoteRenderer(rendererRef, canvasRef, detectedNote, frequency);
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen p-8">
@@ -31,10 +27,10 @@ export function TunerPage() {
         />
 
         <TunerDisplay
-          canvasRef={setCanvasRef}
           detectedNote={detectedNote}
           frequency={frequency}
           cents={cents}
+          volume={volume}
           isListening={isListening}
         />
       </div>

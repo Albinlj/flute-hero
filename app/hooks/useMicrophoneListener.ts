@@ -2,22 +2,29 @@ import { useEffect, useRef, useState } from "react";
 import { YIN } from "pitchfinder";
 import { Note } from "tonal";
 
-export function useMicrophoneListener() {
-  const [isListening, setIsListening] = useState(false);
+export function useMicrophoneListener(initialListening: boolean = false) {
+  const [isListening, setIsListening] = useState(initialListening);
   const [detectedNote, setDetectedNote] = useState<string | null>(null);
   const [frequency, setFrequency] = useState<number | null>(null);
   const [cents, setCents] = useState<number | null>(null);
+  const [volume, setVolume] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const animationFrameRef = useRef<number | null>(null);
-  const pitchDetectorRef = useRef<((buffer: Float32Array) => number | null) | null>(null);
+  const pitchDetectorRef = useRef<
+    ((buffer: Float32Array) => number | null) | null
+  >(null);
   const isListeningRef = useRef(false);
 
   const processAudio = () => {
-    if (!analyserRef.current || !pitchDetectorRef.current || !isListeningRef.current) {
+    if (
+      !analyserRef.current ||
+      !pitchDetectorRef.current ||
+      !isListeningRef.current
+    ) {
       return;
     }
 
@@ -26,24 +33,43 @@ export function useMicrophoneListener() {
     const dataArray = new Float32Array(bufferLength);
     analyser.getFloatTimeDomainData(dataArray);
 
-    const detectPitch = pitchDetectorRef.current;
-    const detectedFrequency = detectPitch(dataArray);
+    // Calculate volume (RMS)
+    let sum = 0;
+    for (let i = 0; i < bufferLength; i++) {
+      sum += dataArray[i] * dataArray[i];
+    }
+    const rms = Math.sqrt(sum / bufferLength);
+    const volumeLevel = Math.min(rms * 10, 1); // Scale and cap at 1
+    setVolume(volumeLevel);
 
-    if (detectedFrequency && detectedFrequency > 0) {
-      setFrequency(detectedFrequency);
+    // Only detect pitch if volume is above threshold
+    const VOLUME_THRESHOLD = 0.01;
+    if (volumeLevel > VOLUME_THRESHOLD) {
+      const detectPitch = pitchDetectorRef.current;
+      const detectedFrequency = detectPitch(dataArray);
 
-      // Convert frequency to note name
-      const note = Note.fromFreq(detectedFrequency);
-      if (note) {
-        setDetectedNote(note);
+      if (detectedFrequency && detectedFrequency > 0) {
+        setFrequency(detectedFrequency);
 
-        // Calculate cents deviation from target pitch
-        const targetFreq = Note.freq(note);
-        if (targetFreq) {
-          const centsDeviation = 1200 * Math.log2(detectedFrequency / targetFreq);
-          setCents(centsDeviation);
+        // Convert frequency to note name
+        const note = Note.fromFreq(detectedFrequency);
+        if (note) {
+          setDetectedNote(note);
+
+          // Calculate cents deviation from target pitch
+          const targetFreq = Note.freq(note);
+          if (targetFreq) {
+            const centsDeviation =
+              1200 * Math.log2(detectedFrequency / targetFreq);
+            setCents(centsDeviation);
+          }
         }
       }
+    } else {
+      // Clear note when volume is too low
+      setDetectedNote(null);
+      setFrequency(null);
+      setCents(null);
     }
 
     if (isListeningRef.current) {
@@ -76,7 +102,9 @@ export function useMicrophoneListener() {
       setIsListening(true);
       processAudio();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to access microphone");
+      setError(
+        err instanceof Error ? err.message : "Failed to access microphone"
+      );
       setIsListening(false);
     }
   };
@@ -103,9 +131,13 @@ export function useMicrophoneListener() {
     setDetectedNote(null);
     setFrequency(null);
     setCents(null);
+    setVolume(0);
   };
 
   useEffect(() => {
+    if (initialListening) {
+      startListening();
+    }
     return () => {
       stopListening();
     };
@@ -116,9 +148,9 @@ export function useMicrophoneListener() {
     detectedNote,
     frequency,
     cents,
+    volume,
     error,
     startListening,
     stopListening,
   };
 }
-
